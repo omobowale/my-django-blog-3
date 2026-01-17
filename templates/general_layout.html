@@ -1,0 +1,255 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="{% static 'post.css' %}" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet" />
+    {% block title %}
+       <title> Default page </title>
+    {% endblock %}
+    <style>
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.6s ease-out forwards;
+      }
+
+      .slide-in {
+        animation: slideIn 0.5s ease-out forwards;
+      }
+
+      .form-input:focus {
+        transform: translateY(-2px);
+        transition: all 0.3s ease;
+      }
+
+      .btn-submit {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-submit::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+      }
+
+      .btn-submit:hover::before {
+        width: 300px;
+        height: 300px;
+      }
+
+      .file-upload-wrapper {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .file-upload-wrapper input[type=file] {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+      }
+
+      .preview-image {
+        max-width: 300px;
+        max-height: 300px;
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      }
+
+      .char-counter {
+        font-size: 0.75rem;
+        color: #6b7280;
+      }
+
+      .gradient-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+    </style>
+
+    {% block custom_styles %}
+
+    {% endblock %}
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <!-- Navigation Bar -->
+    <nav class="gradient-bg shadow-lg">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center">
+            <i class="fas fa-blog text-white text-2xl mr-3"></i>
+            <span class="text-white font-bold text-xl">MyBlog</span>
+          </div>
+          <div class="flex items-center space-x-4">
+            <a href="{% url 'posts_list' %}" class="text-white hover:text-gray-200 transition-colors px-3 py-2 rounded-md text-sm font-medium">
+              <i class="fas fa-home mr-2"></i>Home
+            </a>
+            <a href="{% url 'posts_list' %}" class="text-white hover:text-gray-200 transition-colors px-3 py-2 rounded-md text-sm font-medium">
+              <i class="fas fa-list mr-2"></i>All Posts
+            </a>
+
+            {% comment %} Show logged in user {% endcomment %}
+            <span class="text-white border p-1">
+
+                {% if user.is_authenticated %}
+                    {{ user.first_name }} {{ user.last_name }}
+                {% else %}
+
+                {% endif %}
+
+
+            </span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    {% block main_content %}
+
+    {% endblock %}
+
+    <script>
+      // Character counter for title
+      const titleInput = document.getElementById('title');
+      const titleCount = document.getElementById('titleCount');
+      
+      titleInput.addEventListener('input', function() {
+        titleCount.textContent = this.value.length;
+      });
+
+      // Initialize title count on page load
+      if (titleInput.value) {
+        titleCount.textContent = titleInput.value.length;
+      }
+
+      // Character counter for content
+      const contentInput = document.getElementById('content');
+      const contentCount = document.getElementById('contentCount');
+      
+      contentInput.addEventListener('input', function() {
+        contentCount.textContent = this.value.length;
+      });
+
+      // Initialize content count on page load
+      if (contentInput.value) {
+        contentCount.textContent = contentInput.value.length;
+      }
+
+      // Image preview functionality
+      const imageInput = document.getElementById('image');
+      const imagePreview = document.getElementById('imagePreview');
+      const previewImg = document.getElementById('previewImg');
+      const removeImageBtn = document.getElementById('removeImage');
+      const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+
+      imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            imagePreview.classList.remove('hidden');
+            uploadPlaceholder.innerHTML = `
+              <i class="fas fa-check-circle text-green-500 text-4xl mb-3"></i>
+              <p class="text-sm text-green-600 font-semibold">Image selected: ${file.name}</p>
+              <p class="text-xs text-gray-500">Click to change</p>
+            `;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      removeImageBtn.addEventListener('click', function() {
+        imageInput.value = '';
+        imagePreview.classList.add('hidden');
+        uploadPlaceholder.innerHTML = `
+          <i class="fas fa-cloud-upload-alt text-gray-400 text-4xl mb-3"></i>
+          <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+          <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+        `;
+      });
+
+      // Form validation
+      const form = document.getElementById('postForm');
+      form.addEventListener('submit', function(e) {
+        const title = titleInput.value.trim();
+        const content = contentInput.value.trim();
+
+        if (!title || !content) {
+          e.preventDefault();
+          if (!title) {
+            titleInput.classList.add('border-red-500');
+            titleInput.focus();
+          }
+          if (!content) {
+            contentInput.classList.add('border-red-500');
+          }
+        }
+      });
+
+      // Remove error styling on input
+      titleInput.addEventListener('input', function() {
+        this.classList.remove('border-red-500');
+      });
+
+      contentInput.addEventListener('input', function() {
+        this.classList.remove('border-red-500');
+      });
+    </script>
+  </body>
+</html>

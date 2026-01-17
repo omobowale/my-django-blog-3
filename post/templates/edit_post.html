@@ -1,0 +1,64 @@
+{% extends "general_layout.html" %}
+
+{% block title %}
+
+  <title>Edit Post - MyBlog</title>
+
+{% endblock %}
+
+
+{% block main_content%}
+
+    <main class="w-full px-10 mx-auto mt-10 main">
+      <h1 class="font-bold text-[26px] mb-10">Edit post</h1>  
+
+      
+
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="w-[800px] mx-auto">
+          <div class="flex flex-col mb-3">
+            <label>Title</label>
+            <input class="border border-gray-300 outline-none p-2" name="title" value="{{form.title.value | default:''}}" />
+            <div class="text-red-300 text-xs">
+            {% if form.errors.title %}
+                {{ form.errors.title }}
+            {% endif %}
+            </div>
+          </div>
+          <div class="flex flex-col mb-3">
+            <label>Content</label>
+            <textarea rows="5" class="outline-none p-2 w-full border border-gray-300" name="content">{{form.content.value | default:''}}</textarea>
+            <div class="text-red-300 text-xs">
+            {% if form.errors.content %}
+                {{ form.errors.content }}
+            {% endif %}
+            </div>
+          </div>
+          <div class="flex flex-col mb-3">
+            <label>Image</label>
+            {% if post.image %}
+              <div class="mb-2">
+                <img src="{{ post.image.url }}" alt="Current image" class="max-w-xs h-auto" />
+                <p class="text-sm text-gray-600 mt-1">Current image</p>
+              </div>
+            {% endif %}
+            <input type="file" class="border border-gray-300 outline-none p-2" name="image" accept="image/*" />
+            <div class="text-red-300 text-xs">
+            {% if form.errors.image %}
+                {{ form.errors.image }}
+            {% endif %}
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <button class="p-2 rounded-md my-3 bg-blue-600 text-white" type="submit">Submit</button>
+          </div>
+        </div>
+      </form>
+    </main>
+
+
+{% endblock %}
+
+
+
